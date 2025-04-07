@@ -1,0 +1,406 @@
+package Window;
+import java.util.LinkedList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
+
+public class Main_window extends javax.swing.JFrame {
+
+    LinkedList <Rect_integral> listR = new LinkedList <Rect_integral> ();
+    
+    public Main_window() {
+        initComponents();
+        
+    }
+
+    public class InvalidException extends Exception {
+        public InvalidException(String message) {
+            super(message);
+        }
+    }
+    
+   
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        TextBox_HighGran = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        Main_Table = new javax.swing.JTable();
+        Button_rezult = new javax.swing.JButton();
+        Button_add = new javax.swing.JButton();
+        Button_delete = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        TextBox_LowGran = new javax.swing.JTextField();
+        TextBox_hod = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        Clear_Button = new javax.swing.JButton();
+        Button_Fill = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        TextBox_HighGran.setAlignmentX(1.0F);
+        TextBox_HighGran.setMinimumSize(new java.awt.Dimension(50, 70));
+        TextBox_HighGran.setPreferredSize(new java.awt.Dimension(100, 30));
+        TextBox_HighGran.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TextBox_HighGranActionPerformed(evt);
+            }
+        });
+
+        Main_Table.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Нижняя граница", "Верхняя граница", "Шаг", "Результат"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true, true, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(Main_Table);
+
+        Button_rezult.setLabel("Вычислить");
+        Button_rezult.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Button_rezultMouseClicked(evt);
+            }
+        });
+        Button_rezult.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Button_rezultActionPerformed(evt);
+            }
+        });
+
+        Button_add.setText("Добавить");
+        Button_add.setActionCommand("");
+        Button_add.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Button_addMouseClicked(evt);
+            }
+        });
+
+        Button_delete.setText("Удалить");
+        Button_delete.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Button_deleteMouseClicked(evt);
+            }
+        });
+        Button_delete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Button_deleteActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Верхняя граница");
+
+        TextBox_LowGran.setAlignmentX(1.0F);
+        TextBox_LowGran.setMinimumSize(new java.awt.Dimension(50, 70));
+        TextBox_LowGran.setPreferredSize(new java.awt.Dimension(100, 30));
+        TextBox_LowGran.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TextBox_LowGranActionPerformed(evt);
+            }
+        });
+
+        TextBox_hod.setAlignmentX(1.0F);
+        TextBox_hod.setMinimumSize(new java.awt.Dimension(50, 70));
+        TextBox_hod.setPreferredSize(new java.awt.Dimension(100, 30));
+        TextBox_hod.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TextBox_hodActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Нижняя граница");
+
+        jLabel3.setText("Шаг");
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel4.setText("sin(x)");
+
+        Clear_Button.setText("Очистить");
+        Clear_Button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Clear_ButtonActionPerformed(evt);
+            }
+        });
+
+        Button_Fill.setText("Заполнить");
+        Button_Fill.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Button_FillActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(78, 78, 78)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(TextBox_LowGran, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(TextBox_HighGran, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(26, 26, 26)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel3)
+                                .addComponent(jLabel2)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(Button_add)
+                                    .addComponent(TextBox_hod, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addComponent(Button_rezult)
+                                .addGap(30, 30, 30)
+                                .addComponent(Button_delete)
+                                .addGap(18, 18, 18)
+                                .addComponent(Button_Fill)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                                .addComponent(Clear_Button)))
+                        .addGap(57, 57, 57))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(104, 104, 104)
+                .addComponent(jLabel4)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(TextBox_HighGran, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(TextBox_LowGran, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addGap(22, 22, 22)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(TextBox_hod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(Button_add)
+                    .addComponent(Button_delete)
+                    .addComponent(Button_rezult)
+                    .addComponent(Button_Fill)
+                    .addComponent(Clear_Button))
+                .addGap(30, 30, 30)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(54, 54, 54))
+        );
+
+        jLabel1.getAccessibleContext().setAccessibleName("label_HighGrani");
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void Button_rezultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_rezultActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Button_rezultActionPerformed
+
+    private void Button_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_deleteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Button_deleteActionPerformed
+
+    private void TextBox_HighGranActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextBox_HighGranActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TextBox_HighGranActionPerformed
+
+    private void TextBox_LowGranActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextBox_LowGranActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TextBox_LowGranActionPerformed
+
+    private void TextBox_hodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextBox_hodActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TextBox_hodActionPerformed
+
+    private void Button_rezultMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Button_rezultMouseClicked
+        int selectedRow = Main_Table.getSelectedRow();
+        if (selectedRow != -1) 
+        {
+            DefaultTableModel model = (DefaultTableModel) Main_Table.getModel();
+
+            String lowValue = model.getValueAt(selectedRow, 0).toString();
+            String highValue = model.getValueAt(selectedRow, 1).toString();
+            String stepValue = model.getValueAt(selectedRow, 2).toString();
+
+            
+            double low = Double.parseDouble(lowValue);
+            double high = Double.parseDouble(highValue);
+            double step = Double.parseDouble(stepValue);
+            
+            
+            double result = integrateSin(low, high, step);
+            model.setValueAt(result, selectedRow, 3);
+        } 
+        else 
+        {
+            JOptionPane.showMessageDialog(this, "Выберите строку для вычисления!", "Ошибка", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_Button_rezultMouseClicked
+
+    private void Button_deleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Button_deleteMouseClicked
+        int selectedRow = Main_Table.getSelectedRow();
+        if (selectedRow != -1) {
+            DefaultTableModel model = (DefaultTableModel) Main_Table.getModel();
+            model.removeRow(selectedRow);
+            listR.remove(selectedRow);
+        } 
+        else 
+        {
+            JOptionPane.showMessageDialog(this, "Выберите строку для удаления!", "Ошибка", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_Button_deleteMouseClicked
+
+    private void Button_addMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Button_addMouseClicked
+        try {
+        double low = Double.parseDouble(TextBox_LowGran.getText());
+        double high = Double.parseDouble(TextBox_HighGran.getText());
+        double step = Double.parseDouble(TextBox_hod.getText());
+
+        if (low >= high || step <= 0) {
+            JOptionPane.showMessageDialog(this, "Некорректные границы или шаг!", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (low < 0.000001 || high > 1000000 || step < 0.000001 || step > 1000000){
+            throw new InvalidException("Значения должны быть в диапазоне от 0.000001 до 1,000,000!");
+        }
+
+        Rect_integral rec = new Rect_integral(high, low, step ,0);
+        
+        DefaultTableModel model = (DefaultTableModel) Main_Table.getModel();
+        model.addRow(new Object[]{low, high, step, ""});
+        listR.add(rec);
+
+    } catch (InvalidException e) {
+        JOptionPane.showMessageDialog(this, 
+            e.getMessage(), 
+            "Ошибка ввода", 
+            JOptionPane.WARNING_MESSAGE);
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, 
+            "Введите числовые значения!", 
+            "Ошибка", 
+            JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_Button_addMouseClicked
+// clear table
+    private void Clear_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Clear_ButtonActionPerformed
+        DefaultTableModel model = (DefaultTableModel) Main_Table.getModel();
+        model.setRowCount(0);
+    }//GEN-LAST:event_Clear_ButtonActionPerformed
+
+    private void Button_FillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_FillActionPerformed
+        DefaultTableModel model = (DefaultTableModel) Main_Table.getModel();
+        for (Rect_integral iter:listR)
+        {
+            model.addRow(new Object[] {iter.getHigh_value(), iter.getLow_value(), iter.getStep(), iter.getResult()});
+        }
+    }//GEN-LAST:event_Button_FillActionPerformed
+
+    private double integrateSin(double low, double high, double step) 
+    {
+        double result = 0;
+        int selectedRow = Main_Table.getSelectedRow();
+    if (selectedRow != -1) 
+    {
+        DefaultTableModel model = (DefaultTableModel) Main_Table.getModel();
+
+       // double low = (double) model.getValueAt(selectedRow, 0);
+      //  double high = (double) model.getValueAt(selectedRow, 1);
+       // double step = (double) model.getValueAt(selectedRow, 2);
+
+        try {
+            
+            result = computeIntegral(low, high, step);
+            listR.set(selectedRow, new Rect_integral(high, low, step ,result ));
+            model.setValueAt(result, selectedRow, 3);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Ошибка вычисления!", "Ошибка", JOptionPane.ERROR_MESSAGE);
+        }
+    } 
+    else 
+    {
+        JOptionPane.showMessageDialog(this, "Выберите строку для вычисления!", "Ошибка", JOptionPane.WARNING_MESSAGE);
+    }
+        return result;
+} 
+
+public static double computeIntegral(double LowLim, double UpLim, double step) {
+    double start, h;
+    double sumS = 0;
+    start = LowLim;
+    do {
+        h = Math.min(step, (UpLim - start));
+        sumS += h * 0.5 * (Math.sin(start) + Math.sin(start + h));
+        start += h;
+    } while (start < UpLim);
+    return sumS;
+}
+   
+    public static void main(String args[]) {
+      
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Main_window.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(Main_window.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(Main_window.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Main_window.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Main_window().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Button_Fill;
+    private javax.swing.JButton Button_add;
+    private javax.swing.JButton Button_delete;
+    private javax.swing.JButton Button_rezult;
+    private javax.swing.JButton Clear_Button;
+    private javax.swing.JTable Main_Table;
+    private javax.swing.JTextField TextBox_HighGran;
+    private javax.swing.JTextField TextBox_LowGran;
+    private javax.swing.JTextField TextBox_hod;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JScrollPane jScrollPane1;
+    // End of variables declaration//GEN-END:variables
+}
