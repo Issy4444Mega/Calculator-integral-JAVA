@@ -6,6 +6,18 @@ import java.util.LinkedList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 
 public class Main_window extends javax.swing.JFrame {
@@ -43,7 +55,7 @@ public class Main_window extends javax.swing.JFrame {
         Clear_Button = new javax.swing.JButton();
         Button_Fill = new javax.swing.JButton();
         Button_SaveBin = new javax.swing.JButton();
-        Button_LoadBin1 = new javax.swing.JButton();
+        Button_LoadBin = new javax.swing.JButton();
         Button_Save = new javax.swing.JButton();
         Button_Load = new javax.swing.JButton();
 
@@ -162,20 +174,14 @@ public class Main_window extends javax.swing.JFrame {
             }
         });
 
-        Button_LoadBin1.setText("Загрузить(двоичный)");
-        Button_LoadBin1.setActionCommand("");
-        Button_LoadBin1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                Button_LoadBin1MouseClicked(evt);
-            }
-        });
-        Button_LoadBin1.addActionListener(new java.awt.event.ActionListener() {
+        Button_LoadBin.setText("Загрузить(двоичный)");
+        Button_LoadBin.setActionCommand("");
+        Button_LoadBin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Button_LoadBin1ActionPerformed(evt);
+                Button_LoadBinActionPerformed(evt);
             }
         });
 
-        Button_Save.setActionCommand("");
         Button_Save.setLabel("Сохранить");
         Button_Save.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -240,7 +246,7 @@ public class Main_window extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(Button_SaveBin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(Button_LoadBin1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(Button_LoadBin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(Button_Save, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(Button_Load, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)))))
@@ -257,7 +263,7 @@ public class Main_window extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(TextBox_HighGran, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
-                    .addComponent(Button_LoadBin1))
+                    .addComponent(Button_LoadBin))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(14, 14, 14)
@@ -400,26 +406,69 @@ public class Main_window extends javax.swing.JFrame {
     }//GEN-LAST:event_Button_SaveBinMouseClicked
 
     private void Button_SaveBinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_SaveBinActionPerformed
-        
+        JFileChooser fileChooser = new JFileChooser();
+        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            saveToBinaryFile(fileChooser.getSelectedFile());
+        }
     }//GEN-LAST:event_Button_SaveBinActionPerformed
 
-    
+    private void saveToBinaryFile(File file) {
+        try (ObjectOutputStream out = new ObjectOutputStream(
+                new BufferedOutputStream(new FileOutputStream(file)))) {
+            out.writeObject(listR);
+            JOptionPane.showMessageDialog(this, "Данные успешно сохранены в двоичный файл", 
+                "Успех", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Ошибка при сохранении файла: " + e.getMessage(), 
+                "Ошибка", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // Метод для загрузки из двоичного файла
+    private void loadFromBinaryFile(File file) {
+        try (ObjectInputStream in = new ObjectInputStream(
+                new BufferedInputStream(new FileInputStream(file)))) {
+            @SuppressWarnings("unchecked")
+            LinkedList<Rect_integral> loadedList = (LinkedList<Rect_integral>) in.readObject();
+
+            DefaultTableModel model = (DefaultTableModel) Main_Table.getModel();
+            model.setRowCount(0);
+            listR.clear();
+
+            for (Rect_integral rec : loadedList) {
+                model.addRow(new Object[]{
+                    rec.getLow_value(), 
+                    rec.getHigh_value(), 
+                    rec.getStep(), 
+                    rec.getResult()
+                });
+                listR.add(rec);
+            }
+            JOptionPane.showMessageDialog(this, "Данные успешно загружены из двоичного файла", 
+                "Успех", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException | ClassNotFoundException e) {
+            JOptionPane.showMessageDialog(this, "Ошибка при загрузке файла: " + e.getMessage(), 
+                "Ошибка", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     
-    private void Button_LoadBin1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Button_LoadBin1MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_Button_LoadBin1MouseClicked
-
-    private void Button_LoadBin1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_LoadBin1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_Button_LoadBin1ActionPerformed
+    private void Button_LoadBinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_LoadBinActionPerformed
+        JFileChooser fileChooser = new JFileChooser();
+        if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            loadFile(fileChooser.getSelectedFile());
+        }
+    }//GEN-LAST:event_Button_LoadBinActionPerformed
 
     private void Button_SaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Button_SaveMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_Button_SaveMouseClicked
 
     private void Button_SaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_SaveActionPerformed
-        // TODO add your handling code here:
+        JFileChooser fileChooser = new JFileChooser();
+        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            saveToTextFile(fileChooser.getSelectedFile());
+        }
     }//GEN-LAST:event_Button_SaveActionPerformed
 
     private void Button_LoadMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Button_LoadMouseClicked
@@ -427,9 +476,77 @@ public class Main_window extends javax.swing.JFrame {
     }//GEN-LAST:event_Button_LoadMouseClicked
 
     private void Button_LoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_LoadActionPerformed
-        // TODO add your handling code here:
+        JFileChooser fileChooser = new JFileChooser();
+        if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            loadFromTextFile(fileChooser.getSelectedFile());
+        }
     }//GEN-LAST:event_Button_LoadActionPerformed
+    
+    private void saveToTextFile(File file) {
+        try (FileWriter writer = new FileWriter(file)) {
+            DefaultTableModel model = (DefaultTableModel) Main_Table.getModel();
+            for (int i = 0; i < model.getRowCount(); i++) {
+                writer.write(String.format("%f;%f;%f;%f%n",
+                    model.getValueAt(i, 0), 
+                    model.getValueAt(i, 1), 
+                    model.getValueAt(i, 2), 
+                    model.getValueAt(i, 3)));
+            }
+            JOptionPane.showMessageDialog(this, "Данные сохранены в текстовый файл", 
+                "Успех", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Ошибка сохранения: " + e.getMessage(), 
+                "Ошибка", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
+    private void loadFromTextFile(File file) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            DefaultTableModel model = (DefaultTableModel) Main_Table.getModel();
+            model.setRowCount(0);
+            listR.clear();
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(";");
+                if (parts.length == 4) {
+                    double low = Double.parseDouble(parts[0]);
+                    double high = Double.parseDouble(parts[1]);
+                    double step = Double.parseDouble(parts[2]);
+                    double result = Double.parseDouble(parts[3]);
+
+                    model.addRow(new Object[]{low, high, step, result});
+                    listR.add(new Rect_integral(high, low, step, result));
+                }
+            }
+        } catch (IOException | NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Ошибка загрузки: " + e.getMessage(), 
+                "Ошибка", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void loadFile(File file) {
+    try {
+        if (isBinaryFile(file)) {
+            loadFromBinaryFile(file);
+        } else {
+            loadFromTextFile(file);
+        }
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(this,
+            "Не удалось определить формат файла: " + e.getMessage(),
+            "Ошибка", JOptionPane.ERROR_MESSAGE);
+    }
+}
+
+    private boolean isBinaryFile(File file) throws IOException {
+        try (InputStream is = new FileInputStream(file)) {
+            int firstByte = is.read();
+            return firstByte == 0xAC || firstByte == 0xED; // Начало Java сериализованного файла
+        }
+    }
+    
+    
     private double integrateSin(double low, double high, double step) 
     {
         double result = 0;
@@ -501,7 +618,7 @@ public static double computeIntegral(double LowLim, double UpLim, double step) {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Button_Fill;
     private javax.swing.JButton Button_Load;
-    private javax.swing.JButton Button_LoadBin1;
+    private javax.swing.JButton Button_LoadBin;
     private javax.swing.JButton Button_Save;
     private javax.swing.JButton Button_SaveBin;
     private javax.swing.JButton Button_add;

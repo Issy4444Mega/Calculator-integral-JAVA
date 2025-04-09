@@ -66,7 +66,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
                               <Component id="Button_SaveBin" max="32767" attributes="0"/>
-                              <Component id="Button_LoadBin1" max="32767" attributes="0"/>
+                              <Component id="Button_LoadBin" max="32767" attributes="0"/>
                           </Group>
                           <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
                               <Component id="Button_Save" alignment="0" max="32767" attributes="0"/>
@@ -91,7 +91,7 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="TextBox_HighGran" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="Button_LoadBin1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="Button_LoadBin" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
@@ -298,19 +298,17 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="Button_SaveBinActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="Button_LoadBin1">
+    <Component class="javax.swing.JButton" name="Button_LoadBin">
       <Properties>
         <Property name="text" type="java.lang.String" value="&#x417;&#x430;&#x433;&#x440;&#x443;&#x437;&#x438;&#x442;&#x44c;(&#x434;&#x432;&#x43e;&#x438;&#x447;&#x43d;&#x44b;&#x439;)"/>
         <Property name="actionCommand" type="java.lang.String" value=""/>
       </Properties>
       <Events>
-        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="Button_LoadBin1MouseClicked"/>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="Button_LoadBin1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="Button_LoadBinActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="Button_Save">
       <Properties>
-        <Property name="actionCommand" type="java.lang.String" value=""/>
         <Property name="label" type="java.lang.String" value="&#x421;&#x43e;&#x445;&#x440;&#x430;&#x43d;&#x438;&#x442;&#x44c;"/>
       </Properties>
       <Events>

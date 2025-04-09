@@ -1,6 +1,8 @@
 package Window;
+import java.io.Serializable;
 
-public class Rect_integral {
+public class Rect_integral implements Serializable  {
+    private static final long serialVersionUID = 1L;
     private double step;
     private double high_value;
     private double low_value;
@@ -8,6 +10,7 @@ public class Rect_integral {
     
     
     public Rect_integral(double high_value, double low_value, double step, double result){
+        
         this.high_value = high_value;
         this.low_value = low_value;
         this.step = step;
