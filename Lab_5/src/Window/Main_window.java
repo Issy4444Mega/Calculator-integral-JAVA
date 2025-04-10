@@ -332,12 +332,11 @@ public class Main_window extends javax.swing.JFrame {
             double step = Double.parseDouble(stepValue);
 
 
-            // Создаем и запускаем поток для вычисления
+            // Создаем поток
             new Thread(() -> {
-                // Вычисляем интеграл в фоновом потоке
+
                 double result = computeIntegral(low, high, step);
 
-                // Обновляем GUI в основном потоке
                 SwingUtilities.invokeLater(() -> {
                     model.setValueAt(result, selectedRow, 3);
                     listR.set(selectedRow, new Rect_integral(high, low, step, result));
