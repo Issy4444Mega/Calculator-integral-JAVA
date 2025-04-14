@@ -481,22 +481,27 @@ public class Main_window extends javax.swing.JFrame {
             loadFromTextFile(fileChooser.getSelectedFile());
         }
     }//GEN-LAST:event_Button_LoadActionPerformed
-    
+
     private void saveToTextFile(File file) {
         try (FileWriter writer = new FileWriter(file)) {
             DefaultTableModel model = (DefaultTableModel) Main_Table.getModel();
             for (int i = 0; i < model.getRowCount(); i++) {
+                Object resultObj = model.getValueAt(i, 3);
+                double result = (resultObj instanceof Number) ? ((Number)resultObj).doubleValue() :
+                        (resultObj != null && !resultObj.toString().isEmpty()) ?
+                                Double.parseDouble(resultObj.toString()) : 0.0;
+
                 writer.write(String.format("%f;%f;%f;%f%n",
-                    model.getValueAt(i, 0), 
-                    model.getValueAt(i, 1), 
-                    model.getValueAt(i, 2), 
-                    model.getValueAt(i, 3)));
+                        Double.parseDouble(model.getValueAt(i, 0).toString()),
+                        Double.parseDouble(model.getValueAt(i, 1).toString()),
+                        Double.parseDouble(model.getValueAt(i, 2).toString()),
+                        result));
             }
-            JOptionPane.showMessageDialog(this, "Данные сохранены в текстовый файл", 
-                "Успех", JOptionPane.INFORMATION_MESSAGE);
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Ошибка сохранения: " + e.getMessage(), 
-                "Ошибка", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Данные сохранены в текстовый файл",
+                    "Успех", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException | NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Ошибка сохранения: " + e.getMessage(),
+                    "Ошибка", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -510,18 +515,18 @@ public class Main_window extends javax.swing.JFrame {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(";");
                 if (parts.length == 4) {
-                    double low = Double.parseDouble(parts[0]);
-                    double high = Double.parseDouble(parts[1]);
-                    double step = Double.parseDouble(parts[2]);
-                    double result = Double.parseDouble(parts[3]);
+                    double low = Double.parseDouble(parts[0].replace(',', '.'));
+                    double high = Double.parseDouble(parts[1].replace(',', '.'));
+                    double step = Double.parseDouble(parts[2].replace(',', '.'));
+                    double result = Double.parseDouble(parts[3].replace(',', '.'));
 
                     model.addRow(new Object[]{low, high, step, result});
                     listR.add(new Rect_integral(high, low, step, result));
                 }
             }
         } catch (IOException | NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Ошибка загрузки: " + e.getMessage(), 
-                "Ошибка", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ошибка загрузки: " + e.getMessage(),
+                    "Ошибка", JOptionPane.ERROR_MESSAGE);
         }
     }
 
