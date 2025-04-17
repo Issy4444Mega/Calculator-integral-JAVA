@@ -12,13 +12,14 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import javax.swing.SwingUtilities;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ExecutionException;
 
 public class Main_window extends javax.swing.JFrame {
 
@@ -28,6 +29,59 @@ public class Main_window extends javax.swing.JFrame {
         initComponents();
         
     }
+
+
+    private class ParallelIntegral {
+        private double low;
+        private double high;
+        private double step;
+        private int selectedRow;
+        private DefaultTableModel model;
+
+        public ParallelIntegral(double low, double high, double step,
+                                          int selectedRow, DefaultTableModel model) {
+            this.low = low;
+            this.high = high;
+            this.step = step;
+            this.selectedRow = selectedRow;
+            this.model = model;
+        }
+
+        public void calculate() {
+            // Разделяем интервал на две части
+            double mid = low + (high - low) / 2.0;
+
+            ExecutorService executor = Executors.newFixedThreadPool(2);
+
+            // Задачи для каждой половины интервала
+            Future<Double> futureFirstHalf = executor.submit(() ->
+                    computeIntegral(low, mid, step/2));
+
+            Future<Double> futureSecondHalf = executor.submit(() ->
+                    computeIntegral(mid, high, step/2));
+
+            try {
+                double firstResult = futureFirstHalf.get();
+                double secondResult = futureSecondHalf.get();
+                double totalResult = firstResult + secondResult;
+
+                SwingUtilities.invokeLater(() -> {
+                    model.setValueAt(totalResult, selectedRow, 3);
+                    listR.set(selectedRow, new Rect_integral(high, low, step, totalResult));
+                });
+
+            } catch (InterruptedException | ExecutionException e) {
+                SwingUtilities.invokeLater(() ->
+                        JOptionPane.showMessageDialog(null,
+                                "Ошибка вычисления: " + e.getMessage(),
+                                "Ошибка",
+                                JOptionPane.ERROR_MESSAGE));
+            } finally {
+                executor.shutdown();
+            }
+        }
+    }
+
 
     public class InvalidException extends Exception {
         public InvalidException(String message) {
@@ -334,13 +388,7 @@ public class Main_window extends javax.swing.JFrame {
 
             // Создаем поток
             new Thread(() -> {
-
-                double result = computeIntegral(low, high, step);
-
-                SwingUtilities.invokeLater(() -> {
-                    model.setValueAt(result, selectedRow, 3);
-                    listR.set(selectedRow, new Rect_integral(high, low, step, result));
-                });
+                new ParallelIntegral(low, high, step, selectedRow, model).calculate();
             }).start();
         } 
         else 
@@ -489,22 +537,27 @@ public class Main_window extends javax.swing.JFrame {
             loadFromTextFile(fileChooser.getSelectedFile());
         }
     }//GEN-LAST:event_Button_LoadActionPerformed
-    
+
     private void saveToTextFile(File file) {
         try (FileWriter writer = new FileWriter(file)) {
             DefaultTableModel model = (DefaultTableModel) Main_Table.getModel();
             for (int i = 0; i < model.getRowCount(); i++) {
+                Object resultObj = model.getValueAt(i, 3);
+                double result = (resultObj instanceof Number) ? ((Number)resultObj).doubleValue() :
+                        (resultObj != null && !resultObj.toString().isEmpty()) ?
+                                Double.parseDouble(resultObj.toString()) : 0.0;
+
                 writer.write(String.format("%f;%f;%f;%f%n",
-                    model.getValueAt(i, 0), 
-                    model.getValueAt(i, 1), 
-                    model.getValueAt(i, 2), 
-                    model.getValueAt(i, 3)));
+                        Double.parseDouble(model.getValueAt(i, 0).toString()),
+                        Double.parseDouble(model.getValueAt(i, 1).toString()),
+                        Double.parseDouble(model.getValueAt(i, 2).toString()),
+                        result));
             }
-            JOptionPane.showMessageDialog(this, "Данные сохранены в текстовый файл", 
-                "Успех", JOptionPane.INFORMATION_MESSAGE);
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Ошибка сохранения: " + e.getMessage(), 
-                "Ошибка", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Данные сохранены в текстовый файл",
+                    "Успех", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException | NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Ошибка сохранения: " + e.getMessage(),
+                    "Ошибка", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -518,18 +571,18 @@ public class Main_window extends javax.swing.JFrame {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(";");
                 if (parts.length == 4) {
-                    double low = Double.parseDouble(parts[0]);
-                    double high = Double.parseDouble(parts[1]);
-                    double step = Double.parseDouble(parts[2]);
-                    double result = Double.parseDouble(parts[3]);
+                    double low = Double.parseDouble(parts[0].replace(',', '.'));
+                    double high = Double.parseDouble(parts[1].replace(',', '.'));
+                    double step = Double.parseDouble(parts[2].replace(',', '.'));
+                    double result = Double.parseDouble(parts[3].replace(',', '.'));
 
                     model.addRow(new Object[]{low, high, step, result});
                     listR.add(new Rect_integral(high, low, step, result));
                 }
             }
         } catch (IOException | NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Ошибка загрузки: " + e.getMessage(), 
-                "Ошибка", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ошибка загрузки: " + e.getMessage(),
+                    "Ошибка", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -555,33 +608,7 @@ public class Main_window extends javax.swing.JFrame {
     }
 
 
-    private double integrateSin(double low, double high, double step)
-    {
-        double result = 0;
-        int selectedRow = Main_Table.getSelectedRow();
-            if (selectedRow != -1)
-            {
-                DefaultTableModel model = (DefaultTableModel) Main_Table.getModel();
 
-               // double low = (double) model.getValueAt(selectedRow, 0);
-              //  double high = (double) model.getValueAt(selectedRow, 1);
-               // double step = (double) model.getValueAt(selectedRow, 2);
-
-                try {
-
-                    result = computeIntegral(low, high, step);
-                    listR.set(selectedRow, new Rect_integral(high, low, step ,result ));
-                    model.setValueAt(result, selectedRow, 3);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Ошибка вычисления!", "Ошибка", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-            else
-            {
-                JOptionPane.showMessageDialog(this, "Выберите строку для вычисления!", "Ошибка", JOptionPane.WARNING_MESSAGE);
-            }
-            return result;
-    }
 
     public static double computeIntegral(double LowLim, double UpLim, double step) {
         double start, h;
