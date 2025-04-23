@@ -407,8 +407,18 @@ public class Main_window extends javax.swing.JFrame {
 
     private void Button_SaveBinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_SaveBinActionPerformed
         JFileChooser fileChooser = new JFileChooser();
+
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Binary files (*.dat)", "dat"));
+
+        fileChooser.setSelectedFile(new File("integral_Bin.dat"));
+
         if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            saveToBinaryFile(fileChooser.getSelectedFile());
+            File selectedFile = fileChooser.getSelectedFile();
+            // Добавляем расширение .dat, если его нет
+            if (!selectedFile.getName().toLowerCase().endsWith(".dat")) {
+                selectedFile = new File(selectedFile.getAbsolutePath() + ".dat");
+            }
+            saveToBinaryFile(selectedFile);
         }
     }//GEN-LAST:event_Button_SaveBinActionPerformed
 
@@ -455,8 +465,10 @@ public class Main_window extends javax.swing.JFrame {
     
     private void Button_LoadBinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_LoadBinActionPerformed
         JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(
+                "Binary files (*.dat)", "dat"));
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            loadFile(fileChooser.getSelectedFile());
+            loadFromBinaryFile(fileChooser.getSelectedFile());
         }
     }//GEN-LAST:event_Button_LoadBinActionPerformed
 
@@ -466,8 +478,16 @@ public class Main_window extends javax.swing.JFrame {
 
     private void Button_SaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_SaveActionPerformed
         JFileChooser fileChooser = new JFileChooser();
+        // фильтр txt
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Text files (*.txt)", "txt"));
+        fileChooser.setSelectedFile(new File("integal_Text.txt"));
+
         if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            saveToTextFile(fileChooser.getSelectedFile());
+            File selectedFile = fileChooser.getSelectedFile();
+            if (!selectedFile.getName().toLowerCase().endsWith(".txt")) {
+                selectedFile = new File(selectedFile.getAbsolutePath() + ".txt");
+            }
+            saveToTextFile(selectedFile);
         }
     }//GEN-LAST:event_Button_SaveActionPerformed
 
@@ -477,6 +497,8 @@ public class Main_window extends javax.swing.JFrame {
 
     private void Button_LoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_LoadActionPerformed
         JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(
+                "Text files (*.txt)", "txt"));
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             loadFromTextFile(fileChooser.getSelectedFile());
         }
