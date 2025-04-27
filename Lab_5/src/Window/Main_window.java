@@ -39,7 +39,7 @@ public class Main_window extends javax.swing.JFrame {
         private DefaultTableModel model;
 
         public ParallelIntegral(double low, double high, double step,
-                                          int selectedRow, DefaultTableModel model) {
+                                int selectedRow, DefaultTableModel model) {
             this.low = low;
             this.high = high;
             this.step = step;
@@ -48,36 +48,50 @@ public class Main_window extends javax.swing.JFrame {
         }
 
         public void calculate() {
-            // Разделяем интервал на две части
+            // две части
             double mid = low + (high - low) / 2.0;
 
-            ExecutorService executor = Executors.newFixedThreadPool(2);
+            class IntegralResult {
+                double value = 0;
+            }
 
-            // Задачи для каждой половины интервала
-            Future<Double> futureFirstHalf = executor.submit(() ->
-                    computeIntegral(low, mid, step/2));
+            IntegralResult firstResult = new IntegralResult();
+            IntegralResult secondResult = new IntegralResult();
 
-            Future<Double> futureSecondHalf = executor.submit(() ->
-                    computeIntegral(mid, high, step/2));
+            Thread firstThread = new Thread(() -> {
+                firstResult.value = computeIntegral(low, mid, step );
+            });
+
+            Thread secondThread = new Thread(() -> {
+                secondResult.value = computeIntegral(mid, high, step );
+            });
+
+           
+            firstThread.start();
+            secondThread.start();
 
             try {
-                double firstResult = futureFirstHalf.get();
-                double secondResult = futureSecondHalf.get();
-                double totalResult = firstResult + secondResult;
+                // Ждём завершения
+                firstThread.join();
+                secondThread.join();
+
+                
+                double totalResult = firstResult.value + secondResult.value;
 
                 SwingUtilities.invokeLater(() -> {
                     model.setValueAt(totalResult, selectedRow, 3);
                     listR.set(selectedRow, new Rect_integral(high, low, step, totalResult));
                 });
 
-            } catch (InterruptedException | ExecutionException e) {
+            } catch (InterruptedException e) {
                 SwingUtilities.invokeLater(() ->
-                        JOptionPane.showMessageDialog(null,
+                        JOptionPane.showMessageDialog(
+                                null,
                                 "Ошибка вычисления: " + e.getMessage(),
                                 "Ошибка",
-                                JOptionPane.ERROR_MESSAGE));
-            } finally {
-                executor.shutdown();
+                                JOptionPane.ERROR_MESSAGE
+                        )
+                );
             }
         }
     }
